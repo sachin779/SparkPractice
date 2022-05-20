@@ -524,7 +524,80 @@ def get_new_cols(Existing_cols:Set[String],merged_col:Set[String])={
    
   val finall =headerq18.union(prefinal)
        
-  finall.coalesce(1).foreach(println)
+//  finall.coalesce(1).foreach(println)
   
+  
+//Question 19.we have a data like below and we have to read it in spark but have to remove extra element
+  
+  
+  case class SchemaOf(m1:Int,m2:Int,m3:Int)
+  val dataq19=spark.read.option("header","true").option("mode","DROPMALFORMED")
+  .csv("D:/TrendyTech/Week13_spark_optimization_part1/learntosparkcode-master/learntosparkcode-master/multi/dataframe_question19.csv")
+  
+//m1,m2,m3
+//12,34,56
+//23,56,86
+//45,67,56,87
+//56,77,66
+ //dataq19.show()
+
+  
+//Question 20.We have a country data like below and we want to below dataset as a output.write the spark code
+  
+//Id Country
+//1 Srilanka
+//2 Australia
+//3 India
+//4 South Africa
+//5 Newzealand
+//
+//
+//Expected Output:
+//
+//Srilanka Vs Australia
+//Srilanka Vs India
+//Srilanka Vs South Africa
+//Srilanka Vs Newzealand
+//Australia Vs India
+//Australia Vs South Africa
+//Australia Vs Newzealand
+//India Vs South Africa
+//India Vs Newzealand
+//South Africa Vs Newzealand
+val List20=List(
+Row(1,"Srilanka"),
+Row(2,"Australia"),
+Row(3,"India"),
+Row(4,"South Africa"),
+Row(5,"Newzealand"))
+
+  val  cricketTeam=StructType(List(
+          StructField("Id",IntegerType,true),
+          StructField("Country",StringType,true)))
+  
+val df20=spark.sparkContext.parallelize(List20)
+  
+val df20a=spark.createDataFrame(df20,cricketTeam)
+
+df20a.join(df20a.as("df2"),df20a.col("Id")!==col("df2.Id"),"cross")
+.select(df20a.col("Id"),df20a.col("Country"),col("df2.Country"))
+.show()
+ 
+
+  
+  
+  
+  //Id Country
+//1 Srilanka
+//2 Australia
+//3 India
+//4 South Africa
+//5 Newzealand
+  
+  
+
+  
+
+ 
   
 }
